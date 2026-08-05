@@ -11,7 +11,7 @@ Representative query used throughout (search_web + get_calendar_events + estimat
 
 ## 1. App + repo link
 
-`c7-mcp/diagnoser.py` on branch `mcp` — see repo link (to be added once pushed; see note below).
+`c7-mcp/diagnoser.py` on branch `mcp`: https://github.com/rikkunipun/c7-mvp/blob/mcp/c7-mcp/diagnoser.py
 
 ## 2. BEFORE — naive/unoptimized tool call
 
