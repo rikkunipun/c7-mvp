@@ -123,7 +123,7 @@ def diagnose(workflow_description: str) -> str:
 
     # Pass 1: the model DECIDES (it cannot execute anything)
     first = client.chat.completions.create(
-        model="qwen/qwen3-32b", messages=messages,
+        model="qwen/qwen3.6-27b", messages=messages,
         tools=TOOLS, tool_choice="auto",
     ).choices[0].message
 
@@ -137,7 +137,7 @@ def diagnose(workflow_description: str) -> str:
     messages.append({"role": "tool", "tool_call_id": call.id,
                      "content": json.dumps(result)})
     final = client.chat.completions.create(
-        model="qwen/qwen3-32b", messages=messages,
+        model="qwen/qwen3.6-27b", messages=messages,
         tools=TOOLS,
     ).choices[0].message
     return final.content

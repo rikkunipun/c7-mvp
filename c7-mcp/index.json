@@ -1,0 +1,22 @@
+{
+  "index_design": {
+    "sources": [
+      {
+        "source": "search_web",
+        "chunk_unit": "one Tavily search result (already a natural boundary, no further splitting needed)",
+        "metadata_keys_present": ["title", "url", "content", "score", "raw_content"],
+        "keys_used_for_filtering": ["title", "content"],
+        "keys_present_but_unused": ["url", "score", "raw_content"]
+      },
+      {
+        "source": "get_calendar_events",
+        "chunk_unit": "one calendar event (already a natural boundary, no further splitting needed)",
+        "metadata_keys_present": ["title", "date", "start_time", "end_time", "attendees", "description"],
+        "keys_used_for_filtering": ["title", "description"],
+        "keys_present_but_unused": ["date", "start_time", "end_time", "attendees"]
+      }
+    ],
+    "filter_method": "Literal keyword-overlap counting, no embeddings or vector DB. Keywords extracted from the user's workflow_description by lowercasing, stripping light punctuation, and dropping a stopword list. Each chunk scored by how many extracted keywords appear as a substring of its searchable text; zero-score chunks dropped, remainder sorted by score descending, top_n kept.",
+    "discovered_key_insight": "After seeing real search_web output, discovered Tavily already attaches a 'score' relevance field to every result that our filter never uses -- ranking is currently based purely on literal keyword-hit count, which can misrank near-duplicate-topic items. Concretely: for the query 'automate Jira status report to Slack... check my calendar...', the filter kept 'Sprint Planning' over 'Sprint Retrospective' among the calendar events, even though a human reading the model's own prior answer had marked Sprint Retrospective as the relevant one -- 'Sprint Planning' won only because its description incidentally also matched the keyword 'priority', not because it was more topically relevant (the query never contained the word 'sprint' at all, so neither event matched on the word that actually ties them to the theme). Combining our keyword-hit count with Tavily's own 'score' field (for search_web) or with a similar signal for calendar events would likely improve ranking quality without introducing embeddings."
+  }
+}
